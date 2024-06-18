@@ -3,26 +3,23 @@ import Foundation
 enum SPMSettingsAcknowledgements {
 
   static func run(
-    fileManager: FileManager,
+    fileManagerClient: FileManagerClient,
     packageCachePath: String,
     outputPath: String?
-  ) throws {
+  ) async throws {
+    // If no output path is specified, we will use the current directory.
+    let outputPath = outputPath ?? fileManagerClient.currentDirectoryPath()
 
     let url = URL(fileURLWithPath: packageCachePath)
 
-    let subDirectories = try fileManager.contentsOfDirectory(
-      at: url,
-      includingPropertiesForKeys: nil,
-      options: .skipsHiddenFiles
-    )
-    .filter(\.isDirectory)
+    let subDirectories =
+      try fileManagerClient
+      .getSubdirectories(url)
+      .filter(\.isDirectory)
 
     let licenses: [PackageInfo] = try subDirectories.compactMap { subDirectory in
 
-      let files = try fileManager.contentsOfDirectory(
-        at: subDirectory,
-        includingPropertiesForKeys: nil
-      )
+      let files = try fileManagerClient.getSubdirectories(subDirectory)
 
       guard let licenseFile = files.first(where: { $0.lastPathComponent.contains("LICENSE") })
       else {
@@ -40,15 +37,11 @@ enum SPMSettingsAcknowledgements {
       )
     }
 
-    let currentDirectory = fileManager.currentDirectoryPath
-    let currentURL = URL(fileURLWithPath: currentDirectory)
+    let currentURL = URL(fileURLWithPath: outputPath)
     let desiredURL = currentURL.appendingBackport(path: "Settings.bundle")
 
     // Create the settings bundle.
-    try FileManager.default.createDirectory(
-      at: desiredURL,
-      withIntermediateDirectories: true
-    )
+    try fileManagerClient.createDirectory(desiredURL)
 
     // Make the necessary `Root.plist`.
     let rootData = try SettingsBundlePList.root.pListData

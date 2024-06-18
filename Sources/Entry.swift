@@ -2,8 +2,10 @@ import ArgumentParser
 import Foundation
 
 /// Entry point for the command line utility. Handles receiving arguments and passing them to the module logic.
-@main
-struct Entry: ParsableCommand {
+///
+/// * Reason for why the availability limited to macOS 12.0: [Link](https://forums.swift.org/t/asyncparsablecommand-doesnt-work/71300/2).
+@main @available(macOS 12.0, *)
+struct Entry: AsyncParsableCommand {
 
   @Option(
     name: [
@@ -21,9 +23,9 @@ struct Entry: ParsableCommand {
     help: "Where the Settings.bundle should end up.")
   var outputPath: String? = nil
 
-  func run() throws {
-    try SPMSettingsAcknowledgements.run(
-      fileManager: .default,
+  func run() async throws {
+    try await SPMSettingsAcknowledgements.run(
+      fileManagerClient: .live,
       packageCachePath: packageCachePath,
       outputPath: outputPath
     )
