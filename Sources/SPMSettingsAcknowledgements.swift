@@ -5,10 +5,16 @@ enum SPMSettingsAcknowledgements {
   static func run(
     fileManagerClient: FileManagerClient,
     packageCachePath: String,
-    outputPath: String?
+    outputPath: OutputPath
   ) async throws {
+
     // If no output path is specified, we will use the current directory.
-    let outputPath = outputPath ?? fileManagerClient.currentDirectoryPath()
+    let outputPathString: String
+    if case let .specified(value) = outputPath {
+      outputPathString = value
+    } else {
+      outputPathString = fileManagerClient.currentDirectoryPath()
+    }
 
     let url = URL(fileURLWithPath: packageCachePath)
 
@@ -37,7 +43,7 @@ enum SPMSettingsAcknowledgements {
       )
     }
 
-    let currentURL = URL(fileURLWithPath: outputPath)
+    let currentURL = URL(fileURLWithPath: outputPathString)
     let desiredURL = currentURL.appendingBackport(path: "Settings.bundle")
 
     // Create the settings bundle.

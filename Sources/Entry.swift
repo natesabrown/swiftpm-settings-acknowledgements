@@ -12,7 +12,8 @@ struct Entry: AsyncParsableCommand {
       .customLong("package-cache-path"),
       .customShort("p"),
     ],
-    help: "Package cache path")
+    help: "Package cache path"
+  )
   var packageCachePath: String
 
   @Option(
@@ -20,8 +21,12 @@ struct Entry: AsyncParsableCommand {
       .customLong("output-path"),
       .customShort("o"),
     ],
-    help: "Where the Settings.bundle should end up.")
-  var outputPath: String? = nil
+    help: "Where the Settings.bundle should end up.",
+    transform: { (input: String?) -> OutputPath in
+      if let input { .specified(input) } else { .unspecified }
+    }
+  )
+  var outputPath: OutputPath
 
   func run() async throws {
     try await SPMSettingsAcknowledgements.run(
@@ -30,4 +35,18 @@ struct Entry: AsyncParsableCommand {
       outputPath: outputPath
     )
   }
+}
+
+/// Where the user wants to get the information for swift packages.
+enum PackageInfoSource {
+  /// Use the SPM cache, specified by a path to the cache.
+  case cache(path: String)
+  /// Try to pull information from GitHub.
+  case github
+}
+
+/// Where the user wants the new `Settings.bundle` to be created.
+enum OutputPath {
+  case specified(String)
+  case unspecified
 }
