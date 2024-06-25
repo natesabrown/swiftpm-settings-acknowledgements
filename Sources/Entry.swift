@@ -9,12 +9,20 @@ struct Entry: AsyncParsableCommand {
 
   @Option(
     name: [
-      .customLong("package-cache-path"),
-      .customShort("p"),
+      .customLong("directory-path"),
+      .customShort("d"),
     ],
-    help: "Package cache path"
-  )
-  var packageCachePath: String
+    help: "Path to the directory containing the .xcodeproj",
+    completion: .directory)
+  var directoryPath: String?
+
+  @Option(
+    name: [
+      .customLong("package-cache-path")
+    ],
+    help: "Package cache path",
+    completion: .directory)
+  var packageCachePath: String?
 
   @Option(
     name: [
@@ -22,31 +30,34 @@ struct Entry: AsyncParsableCommand {
       .customShort("o"),
     ],
     help: "Where the Settings.bundle should end up.",
-    transform: { (input: String?) -> OutputPath in
-      if let input { .specified(input) } else { .unspecified }
-    }
+    completion: .directory)
+  var outputPath: String?
+
+  @Option(
+    name: [.customLong("package-resolved-path")],
+    help: "Provide a custom path to your Package.resolved file.",
+    completion: .file(extensions: [".resolved"])
   )
-  var outputPath: OutputPath
+  var packageResolvedPath: String?
+
+  @Flag(
+    name: [.customShort("v"), .customLong("verbose")],
+    help: "Print extra details."
+  )
+  var verbose: Bool = false
 
   func run() async throws {
+
+    let logger: CustomLogger = .live(verbose: verbose)
+
     try await SPMSettingsAcknowledgements.run(
       fileManagerClient: .live,
+      gitHubClient: .live,
+      logger: logger,
+      directoryPath: directoryPath,
       packageCachePath: packageCachePath,
-      outputPath: outputPath
+      outputPath: outputPath,
+      packageResolvedPath: packageResolvedPath
     )
   }
-}
-
-/// Where the user wants to get the information for swift packages.
-enum PackageInfoSource {
-  /// Use the SPM cache, specified by a path to the cache.
-  case cache(path: String)
-  /// Try to pull information from GitHub.
-  case github
-}
-
-/// Where the user wants the new `Settings.bundle` to be created.
-enum OutputPath {
-  case specified(String)
-  case unspecified
 }
