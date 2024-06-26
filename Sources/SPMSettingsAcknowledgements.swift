@@ -1,6 +1,5 @@
 import Foundation
 
-@available(macOS 10.15, *)
 enum SPMSettingsAcknowledgements {
 
   enum RunError: LocalizedError {
@@ -98,30 +97,36 @@ enum SPMSettingsAcknowledgements {
     logger: CustomLogger
   ) async throws -> [PackageInfo] {
 
-    try await withThrowingTaskGroup(of: PackageInfo.self, returning: [PackageInfo].self) {
+    try await withThrowingTaskGroup(of: PackageInfo?.self, returning: [PackageInfo].self) {
       taskGroup in
 
       for pin in packageResolvedStructure.pins {
-
-        let location = pin.location
-        let adjustedLocation =
-          location
-          .replacingOccurrences(of: "https://github.com/", with: "")
-          .replacingOccurrences(of: ".git", with: "")
-
+        // Make sure the location is a GitHub URL. If not, print a warning message and skip the API request.
+        guard let gitHubPackageInfo = pin.location.gitHubPackageInfo else {
+          logger.warning("\(pin.location) is not a valid GitHub URL. Skipping...")
+          continue
+        }
         taskGroup.addTask {
           logger.info("Downloading license for \(pin.identity) at \(pin.location)...")
-          let licenseContent = try await gitHubClient.getLicenseContent(adjustedLocation)
-          return .init(
-            name: pin.identity,
-            license: licenseContent
-          )
+          do {
+            let licenseContent = try await gitHubClient.getLicenseContent(gitHubPackageInfo)
+            return .init(
+              name: pin.identity,
+              license: licenseContent
+            )
+          } catch {
+            logger.error(
+              "Got error when trying to fetch license for \(pin.identity) from GitHub:\n\(error.localizedDescription)."
+            )
+            return nil
+          }
         }
       }
 
-      return try await taskGroup.reduce(into: [PackageInfo]()) {
+      return try await taskGroup.reduce(into: [PackageInfo?]()) {
         $0.append($1)
       }
+      .compactMap { $0 }
     }
   }
 

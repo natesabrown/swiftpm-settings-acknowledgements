@@ -4,6 +4,8 @@ struct CustomLogger {
 
   let error: (String) -> Void
 
+  let warning: (String) -> Void
+
   let info: (String) -> Void
 }
 
@@ -15,6 +17,9 @@ extension CustomLogger {
   ) -> Self {
     .init(
       error: {
+        print($0)
+      },
+      warning: {
         print($0)
       },
       info: {

@@ -2,9 +2,7 @@ import ArgumentParser
 import Foundation
 
 /// Entry point for the command line utility. Handles receiving arguments and passing them to the module logic.
-///
-/// * Reason for why the availability limited to macOS 12.0: [Link](https://forums.swift.org/t/asyncparsablecommand-doesnt-work/71300/2).
-@main @available(macOS 12.0, *)
+@main
 struct Entry: AsyncParsableCommand {
 
   @Option(
@@ -40,6 +38,13 @@ struct Entry: AsyncParsableCommand {
   )
   var packageResolvedPath: String?
 
+  @Option(
+    name: [.customLong("github-token")],
+    help:
+      "Add a GitHub token to help prevent rate limiting when fetching license information from GitHub."
+  )
+  var gitHubToken: String?
+
   @Flag(
     name: [.customShort("v"), .customLong("verbose")],
     help: "Print extra details."
@@ -52,7 +57,7 @@ struct Entry: AsyncParsableCommand {
 
     try await SPMSettingsAcknowledgements.run(
       fileManagerClient: .live,
-      gitHubClient: .live,
+      gitHubClient: .live(token: gitHubToken),
       logger: logger,
       directoryPath: directoryPath,
       packageCachePath: packageCachePath,

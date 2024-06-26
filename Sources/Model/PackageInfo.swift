@@ -1,3 +1,5 @@
+import Foundation
+
 /// Information needed from each package to create its corresponding entries in the Settings bundle.
 struct PackageInfo {
   /// The package's name.

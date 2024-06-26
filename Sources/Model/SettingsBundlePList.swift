@@ -1,5 +1,6 @@
 import Foundation
 
+/// Represents the different types of files that are necessary for making the Settings property list, and encapsulates logic related to making the files.
 enum SettingsBundlePList {
 
   /// For `Root.plist`. This is the entry point for custom settings.
