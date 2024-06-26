@@ -28,10 +28,10 @@ enum SPMSettingsAcknowledgements {
         try environment.fileManagerClient
           .getSubdirectories(URL(fileURLWithPath: directoryPath))
           .first { $0.pathExtension == "xcodeproj" }?
-          .appendingBackport(path: "project.xcworkspace")
-          .appendingBackport(path: "xcshareddata")
-          .appendingBackport(path: "swiftpm")
-          .appendingBackport(path: "Package.resolved")
+          .appendingPathComponent("project.xcworkspace")
+          .appendingPathComponent("xcshareddata")
+          .appendingPathComponent("swiftpm")
+          .appendingPathComponent("Package.resolved")
       }
 
     guard let packageResolvedPath,
@@ -66,7 +66,7 @@ enum SPMSettingsAcknowledgements {
 
     // Create the settings bundle.
     let currentURL = URL(fileURLWithPath: outputPath)
-    let desiredURL = currentURL.appendingBackport(path: "Settings.bundle")
+    let desiredURL = currentURL.appendingPathComponent("Settings.bundle")
     try environment.fileManagerClient.createDirectory(desiredURL)
 
     // Make the necessary `Root.plist`.

@@ -26,7 +26,7 @@ enum SettingsBundlePList {
         "\(packageInfo.name).plist"
       }
 
-    return startingPoint.appendingBackport(path: appendString)
+    return startingPoint.appendingPathComponent(appendString)
   }
 
   /// Data for the property list for this part of the settings bundle, encoded from the corresponding dictionary.
