@@ -73,6 +73,23 @@ enum SPMSettingsAcknowledgements {
     let rootData = try SettingsBundlePList.root.pListData
     try rootData.write(to: SettingsBundlePList.root.url(startingPoint: desiredURL))
 
+    let languageCodes = args.languages.split(separator: ",")
+      .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+
+    for languageCode in languageCodes {
+
+      guard let translation = AcknowledgementsTranslation.init(languageCode: languageCode) else {
+        environment.logger.error("Could not find translation for language code \(languageCode).")
+        continue
+      }
+
+      let lProjURL = translation.languageProjectURL(startingPoint: desiredURL)
+      try environment.fileManagerClient.createDirectory(lProjURL)
+      let stringsFileURL = translation.stringsFileURL(startingPoint: lProjURL)
+      guard let data = translation.stringsFileData else { return }
+      try data.write(to: stringsFileURL)
+    }
+
     // Make the `Acknowledgements.plist` page that will link to licenses for all the packages.
     let acknowledgements = SettingsBundlePList.acknowledgements(packageNames: licenses.map(\.name))
     let acknowledgementsData = try acknowledgements.pListData

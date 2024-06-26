@@ -23,6 +23,25 @@ struct Entry: AsyncParsableCommand {
 
   @Option(
     name: [
+      .customLong("languages"),
+      .customShort("l"),
+    ],
+    help:
+      "Specify the languages to localize the \"Acknowledgements\" text for. If multiple, separate by commas (e.g. \"en,es,ja\")."
+  )
+  var languages: String = "en"
+
+  @Option(
+    name: [
+      .customLong("output-path"),
+      .customShort("o"),
+    ],
+    help: "Where the Settings.bundle should end up.",
+    completion: .directory)
+  var outputPath: String?
+
+  @Option(
+    name: [
       .customLong("package-cache-path")
     ],
     help: "Package cache path",
@@ -35,15 +54,6 @@ struct Entry: AsyncParsableCommand {
     completion: .file(extensions: [".resolved"])
   )
   var packageResolvedPath: String?
-
-  @Option(
-    name: [
-      .customLong("output-path"),
-      .customShort("o"),
-    ],
-    help: "Where the Settings.bundle should end up.",
-    completion: .directory)
-  var outputPath: String?
 
   @Flag(
     name: [.customShort("v"), .customLong("verbose")],
@@ -63,6 +73,7 @@ struct Entry: AsyncParsableCommand {
 
     let args: CommandLineArguments = .init(
       directoryPath: directoryPath,
+      languages: languages,
       outputPath: outputPath,
       packageCachePath: packageCachePath,
       packageResolvedPath: packageResolvedPath

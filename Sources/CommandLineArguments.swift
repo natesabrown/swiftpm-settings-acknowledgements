@@ -5,6 +5,8 @@ struct CommandLineArguments {
   /// A path to the directory containing the user's .xcodeproj they want to use this command line tool for.
   /// We will use this to find the `Package.resolved` to gather the packages used.
   let directoryPath: String?
+  /// A comma-separated list of language codes to provide the translations for.
+  let languages: String
   /// The location the settings bundle should be created at.
   let outputPath: String?
   /// A path to the user's SPM cache. This will allow us to extract license information without making network requests to GitHub,

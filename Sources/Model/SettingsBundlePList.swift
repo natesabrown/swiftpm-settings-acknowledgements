@@ -11,7 +11,7 @@ enum SettingsBundlePList {
   case package(info: PackageInfo)
 
   /// A dictionary type that translates well into the property list structure.
-  typealias SettingsPListDict = [String: [[String: String]]]
+  typealias SettingsPListDict = [String: AnyEncodable]
 
   /// The URL for where the property list data should be written.
   func url(startingPoint: URL) -> URL {
@@ -42,33 +42,34 @@ enum SettingsBundlePList {
     switch self {
     case .root:
       [
-        "PreferenceSpecifiers": [
+        "StringsTable": .init("Root"),
+        "PreferenceSpecifiers": .init([
           [
             "Type": "PSChildPaneSpecifier",
             "Title": "Acknowledgements",
             "File": "Acknowledgements",
           ]
-        ]
+        ]),
       ]
     case .acknowledgements(let packageNames):
       [
-        "PreferenceSpecifiers":
+        "PreferenceSpecifiers": .init(
           packageNames.sorted().map {
             [
               "Type": "PSChildPaneSpecifier",
               "Title": "\($0)",
               "File": "\($0)",
             ]
-          }
+          })
       ]
     case .package(let packageInfo):
       [
-        "PreferenceSpecifiers": [
+        "PreferenceSpecifiers": .init([
           [
             "Type": "PSGroupSpecifier",
             "FooterText": packageInfo.license,
           ]
-        ]
+        ])
       ]
     }
   }
