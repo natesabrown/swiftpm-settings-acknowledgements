@@ -1,12 +1,11 @@
 import Foundation
 
 struct GitHubClient {
-
+  /// Get the content of the license for a particular GitHub package.
   let getLicenseContent: (_ packageInfo: GitHubPackageInfo) async throws -> String
 }
 
-// MARK: - Live GitHubClient Implementation
-@available(macOS 10.15, *)
+// MARK: - Live Implementation
 extension GitHubClient {
 
   enum LiveClientError: LocalizedError {
@@ -21,7 +20,7 @@ extension GitHubClient {
       case .couldNotMakeURL(let repoName):
         "Could not make URL for \(repoName)"
       case .responseNot200(let repoName, let statusCode):
-        "Got status code \(statusCode) for \(repoName). Please try adding an access token."
+        "Got status code \(statusCode) for \(repoName)."
       case .couldNotEncodeToBase64(let repoName):
         "Could not encode to Base64 for \(repoName)"
       case .couldNotDecodeFromBase64(let repoName):

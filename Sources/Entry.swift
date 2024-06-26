@@ -15,21 +15,19 @@ struct Entry: AsyncParsableCommand {
   var directoryPath: String?
 
   @Option(
+    name: [.customLong("github-token")],
+    help:
+      "Add a GitHub token to help prevent rate limiting when fetching license information from GitHub."
+  )
+  var gitHubToken: String?
+
+  @Option(
     name: [
       .customLong("package-cache-path")
     ],
     help: "Package cache path",
     completion: .directory)
   var packageCachePath: String?
-
-  @Option(
-    name: [
-      .customLong("output-path"),
-      .customShort("o"),
-    ],
-    help: "Where the Settings.bundle should end up.",
-    completion: .directory)
-  var outputPath: String?
 
   @Option(
     name: [.customLong("package-resolved-path")],
@@ -39,11 +37,13 @@ struct Entry: AsyncParsableCommand {
   var packageResolvedPath: String?
 
   @Option(
-    name: [.customLong("github-token")],
-    help:
-      "Add a GitHub token to help prevent rate limiting when fetching license information from GitHub."
-  )
-  var gitHubToken: String?
+    name: [
+      .customLong("output-path"),
+      .customShort("o"),
+    ],
+    help: "Where the Settings.bundle should end up.",
+    completion: .directory)
+  var outputPath: String?
 
   @Flag(
     name: [.customShort("v"), .customLong("verbose")],
@@ -55,14 +55,22 @@ struct Entry: AsyncParsableCommand {
 
     let logger: CustomLogger = .live(verbose: verbose)
 
-    try await SPMSettingsAcknowledgements.run(
+    let environment: Environment = .init(
       fileManagerClient: .live,
       gitHubClient: .live(token: gitHubToken),
-      logger: logger,
+      logger: logger
+    )
+
+    let args: CommandLineArguments = .init(
       directoryPath: directoryPath,
-      packageCachePath: packageCachePath,
       outputPath: outputPath,
+      packageCachePath: packageCachePath,
       packageResolvedPath: packageResolvedPath
+    )
+
+    try await SPMSettingsAcknowledgements.run(
+      args: args,
+      environment: environment
     )
   }
 }

@@ -1,14 +1,15 @@
 import Foundation
 
 struct FileManagerClient {
-
+  /// Returns a list of the subdirectories for a given source URL.
   let getSubdirectories: (_ source: URL) throws -> [URL]
-
+  /// Returns the path of the executing process.
   let currentDirectoryPath: () -> String
-
+  /// Attempt to create a directory at a given path.
   let createDirectory: (_ at: URL) throws -> Void
 }
 
+// MARK: - Live Implementation
 extension FileManagerClient {
 
   static var live: Self {

@@ -14,23 +14,18 @@ enum SPMSettingsAcknowledgements {
   }
 
   static func run(
-    fileManagerClient: FileManagerClient,
-    gitHubClient: GitHubClient,
-    logger: CustomLogger,
-    directoryPath: String?,
-    packageCachePath: String?,
-    outputPath: String?,
-    packageResolvedPath: String?
+    args: CommandLineArguments,
+    environment: Environment
   ) async throws {
 
-    let directoryPath = directoryPath ?? fileManagerClient.currentDirectoryPath()
+    let directoryPath = args.directoryPath ?? environment.fileManagerClient.currentDirectoryPath()
 
     // If the user hasn't provided a path to the `Package.resolved` file, we will need to find it.
     let packageResolvedPath =
-      if let packageResolvedPath {
+      if let packageResolvedPath = args.packageResolvedPath {
         URL(fileURLWithPath: packageResolvedPath)
       } else {
-        try fileManagerClient
+        try environment.fileManagerClient
           .getSubdirectories(URL(fileURLWithPath: directoryPath))
           .first { $0.pathExtension == "xcodeproj" }?
           .appendingBackport(path: "project.xcworkspace")
@@ -50,29 +45,29 @@ enum SPMSettingsAcknowledgements {
       throw RunError.couldNotParsePackageResolved
     }
 
-    logger.info("Parsed Package.resolved.")
+    environment.logger.info("Parsed Package.resolved.")
 
     let licenses =
-      if let packageCachePath {
+      if let packageCachePath = args.packageCachePath {
         try await getPackageInfoFromCacheDirectory(
-          fileManagerClient: fileManagerClient,
+          fileManagerClient: environment.fileManagerClient,
           packageCachePath: packageCachePath
         )
       } else {
         try await getPackageInfoFromGitHub(
-          gitHubClient: gitHubClient,
+          gitHubClient: environment.gitHubClient,
           packageResolvedStructure: packageResolvedStructure,
-          logger: logger
+          logger: environment.logger
         )
       }
 
     // If no output path is specified, we will use the current directory.
-    let outputPath = outputPath ?? fileManagerClient.currentDirectoryPath()
+    let outputPath = args.outputPath ?? environment.fileManagerClient.currentDirectoryPath()
 
     // Create the settings bundle.
     let currentURL = URL(fileURLWithPath: outputPath)
     let desiredURL = currentURL.appendingBackport(path: "Settings.bundle")
-    try fileManagerClient.createDirectory(desiredURL)
+    try environment.fileManagerClient.createDirectory(desiredURL)
 
     // Make the necessary `Root.plist`.
     let rootData = try SettingsBundlePList.root.pListData
