@@ -74,3 +74,15 @@ enum SettingsBundlePList {
     }
   }
 }
+
+extension FileManagerClient {
+
+  /// Writes the data for this property list representation at a given point in the file system.
+  func writePListDataToBundle(
+    _ pList: SettingsBundlePList,
+    startingPoint: URL
+  ) throws {
+    let data = try pList.pListData
+    try writeDataToURL(data, pList.url(startingPoint: startingPoint))
+  }
+}

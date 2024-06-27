@@ -4,8 +4,8 @@ extension String {
 
   /// For a string representing a URL, returns relevant information for receiving information from the GitHub API.
   ///
-  /// RegEx inspired by https://www.advancedswift.com/regex-capture-groups/.
-  /// Should use Swift RegEx when this package adopts Swift 6.
+  /// * RegEx inspired by https://www.advancedswift.com/regex-capture-groups/.
+  /// * `NSRegularExpression` is used over modern RegEx because this executable targets MacOS 12 rather than 13.
   var gitHubPackageInfo: GitHubPackageInfo? {
 
     guard
