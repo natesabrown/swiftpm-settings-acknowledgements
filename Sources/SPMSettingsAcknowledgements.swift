@@ -25,7 +25,7 @@ enum SPMSettingsAcknowledgements {
         """
       )
 
-      licenses = try await getPackageInfoFromCacheDirectory(
+      licenses = try getPackageInfoFromCacheDirectory(
         packageCachePath: packageCachePath,
         environment: environment
       )
@@ -223,7 +223,7 @@ enum SPMSettingsAcknowledgements {
   static func getPackageInfoFromCacheDirectory(
     packageCachePath: String,
     environment: Environment
-  ) async throws -> [PackageInfo] {
+  ) throws -> [PackageInfo] {
 
     let cacheDirectoryURL = URL(fileURLWithPath: packageCachePath)
     let subDirectories = try environment.fileManagerClient
