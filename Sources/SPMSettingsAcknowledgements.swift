@@ -37,9 +37,8 @@ enum SPMSettingsAcknowledgements {
       environment.logger.info(
         "Attempting to retrieve package and license information from GitHub...")
       licenses = try await getPackageInfoFromGitHub(
-        gitHubClient: environment.gitHubClient,
         packageResolvedStructure: packageResolvedStructure,
-        logger: environment.logger
+        environment: environment
       )
     }
 
@@ -159,7 +158,7 @@ enum SPMSettingsAcknowledgements {
         .appendingPathComponent("Package.resolved")
 
       guard let potentialPath else {
-        throw RunError.couldNotFindXCodeProjInCurrentDirectory
+        throw RunError.couldNotFindXcodeProjInCurrentDirectory
       }
 
       packageResolvedPath = potentialPath
@@ -181,9 +180,8 @@ enum SPMSettingsAcknowledgements {
   }
 
   static func getPackageInfoFromGitHub(
-    gitHubClient: GitHubClient,
     packageResolvedStructure: PackageResolvedStructure,
-    logger: CustomLogger
+    environment: Environment
   ) async throws -> [PackageInfo] {
     // Using a task group will let us make multiple network requests at the same time, improving speed.
     try await withThrowingTaskGroup(of: PackageInfo?.self, returning: [PackageInfo].self) {
@@ -192,20 +190,21 @@ enum SPMSettingsAcknowledgements {
       for pin in packageResolvedStructure.pins {
         // Make sure the location is a GitHub URL. If not, print a warning message and skip the API request.
         guard let gitHubPackageInfo = pin.location.gitHubPackageInfo else {
-          logger.warning("\(pin.location) is not a valid GitHub URL. Skipping...")
+          environment.logger.warning("\(pin.location) is not a valid GitHub URL. Skipping...")
           continue
         }
 
         taskGroup.addTask {
-          logger.info("Downloading license for \(pin.identity) at \(pin.location)...")
+          environment.logger.info("Downloading license for \(pin.identity) at \(pin.location)...")
           do {
-            let licenseContent = try await gitHubClient.getLicenseContent(gitHubPackageInfo)
+            let licenseContent = try await environment.gitHubClient.getLicenseContent(
+              gitHubPackageInfo)
             return .init(
               name: pin.identity,
               license: licenseContent
             )
           } catch {
-            logger.error(
+            environment.logger.error(
               "Got error when trying to fetch license for \(pin.identity) from GitHub:\n\(error.localizedDescription)."
             )
             return nil
@@ -228,7 +227,6 @@ enum SPMSettingsAcknowledgements {
     let cacheDirectoryURL = URL(fileURLWithPath: packageCachePath)
     let subDirectories = try environment.fileManagerClient
       .getSubdirectories(cacheDirectoryURL)
-      .filter(\.isDirectory)
 
     let licenses: [PackageInfo] = try subDirectories.compactMap { subDirectory in
       // Get available files in cache directory.
