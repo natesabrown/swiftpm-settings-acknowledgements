@@ -6,59 +6,42 @@ import Foundation
 struct Entry: AsyncParsableCommand {
 
   @Option(
-    name: [
-      .customLong("directory-path"),
-      .customShort("d"),
-    ],
-    help: "Path to the directory containing the .xcodeproj",
+    name: Argument.directoryPath.argNames,
+    help: Argument.directoryPath.helpText,
     completion: .directory)
   var directoryPath: String?
 
   @Option(
-    name: [.customLong("github-token")],
-    help:
-      "Add a GitHub token to help prevent rate limiting when fetching license information from GitHub."
-  )
+    name: Argument.gitHubToken.argNames,
+    help: Argument.gitHubToken.helpText)
   var gitHubToken: String?
 
   @Option(
-    name: [
-      .customLong("languages"),
-      .customShort("l"),
-    ],
-    help:
-      "Specify the languages to localize the \"Acknowledgements\" text for. If multiple, separate by commas (e.g. \"en,es,ja\")."
-  )
+    name: Argument.languages.argNames,
+    help: Argument.languages.helpText)
   var languages: String = "en"
 
   @Option(
-    name: [
-      .customLong("output-path"),
-      .customShort("o"),
-    ],
-    help: "Where the Settings.bundle should end up.",
+    name: Argument.outputPath.argNames,
+    help: Argument.outputPath.helpText,
     completion: .directory)
   var outputPath: String?
 
   @Option(
-    name: [
-      .customLong("package-cache-path")
-    ],
-    help: "Package cache path",
+    name: Argument.packageCachePath.argNames,
+    help: Argument.packageCachePath.helpText,
     completion: .directory)
   var packageCachePath: String?
 
   @Option(
-    name: [.customLong("package-resolved-path")],
-    help: "Provide a custom path to your Package.resolved file.",
-    completion: .file(extensions: [".resolved"])
-  )
+    name: Argument.packageResolvedPath.argNames,
+    help: Argument.packageResolvedPath.helpText,
+    completion: .file(extensions: [".resolved"]))
   var packageResolvedPath: String?
 
   @Flag(
-    name: [.customShort("v"), .customLong("verbose")],
-    help: "Print extra details."
-  )
+    name: Argument.verbose.argNames,
+    help: Argument.verbose.helpText)
   var verbose: Bool = false
 
   func run() async throws {
