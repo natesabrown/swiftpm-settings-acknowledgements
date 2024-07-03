@@ -8,7 +8,7 @@ enum AcknowledgementsTranslation: String, CaseIterable {
   case en = "Acknowledgements"
   case es = "Agradecimientos"
   case fr = "Remerciements"
-  case ka = "ಕೃತಜ್ಞತಾ ಸೂಚನೆ"
+  case kn = "ಕೃತಜ್ಞತಾ ಸೂಚನೆ"
   case ja = "謝辞"
   case zh_Hans = "致谢"
 
@@ -37,5 +37,18 @@ enum AcknowledgementsTranslation: String, CaseIterable {
   var stringsFileData: Data? {
     let fileContents = "\"Acknowledgements\" = \"\(self.rawValue)\";"
     return fileContents.data(using: .utf8)
+  }
+}
+
+extension AcknowledgementsTranslation {
+
+  var languageName: String {
+    Locale.current.localizedString(forIdentifier: "\(self)") ?? "Unknown"
+  }
+
+  static var availableLanguagesDescription: String {
+    Self.allCases.map {
+      "* `\($0)`: \($0.languageName)"
+    }.joined(separator: "\n")
   }
 }
