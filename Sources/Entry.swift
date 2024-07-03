@@ -46,27 +46,25 @@ struct Entry: AsyncParsableCommand {
 
   func run() async throws {
 
-    print(Argument.fullMarkdownDocumentation)
+    let logger: CustomLogger = .live(verbose: verbose)
 
-    //    let logger: CustomLogger = .live(verbose: verbose)
-    //
-    //    let environment: Environment = .init(
-    //      fileManagerClient: .live,
-    //      gitHubClient: .live(token: gitHubToken),
-    //      logger: logger
-    //    )
-    //
-    //    let args: CommandLineArguments = .init(
-    //      directoryPath: directoryPath,
-    //      languages: languages,
-    //      outputPath: outputPath,
-    //      packageCachePath: packageCachePath,
-    //      packageResolvedPath: packageResolvedPath
-    //    )
-    //
-    //    try await SPMSettingsAcknowledgements.run(
-    //      args: args,
-    //      environment: environment
-    //    )
+    let environment: Environment = .init(
+      fileManagerClient: .live,
+      gitHubClient: .live(token: gitHubToken),
+      logger: logger
+    )
+
+    let args: CommandLineArguments = .init(
+      directoryPath: directoryPath,
+      languages: languages,
+      outputPath: outputPath,
+      packageCachePath: packageCachePath,
+      packageResolvedPath: packageResolvedPath
+    )
+
+    try await SPMSettingsAcknowledgements.run(
+      args: args,
+      environment: environment
+    )
   }
 }

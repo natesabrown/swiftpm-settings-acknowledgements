@@ -1,4 +1,4 @@
-# SPM Settings & Acknowledgements
+# SwiftPM Settings Acknowledgements
 
 ## Options
 
@@ -50,7 +50,6 @@ If not provided, this program will look for the file within your directory's `.x
 **(Flag)** Print extra details during program execution.
 
 **Default**: disabled.
-
 
 ## Acknowledgements
 

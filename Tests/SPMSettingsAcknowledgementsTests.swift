@@ -1,6 +1,6 @@
 import XCTest
 
-@testable import make_settings_from_spm
+@testable import swiftpm_settings_acknowledgements
 
 class SPMSettingsAcknowledgementsTests: XCTestCase {
 
