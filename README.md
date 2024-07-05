@@ -4,7 +4,7 @@ Generate a license acknowledgements page for your app from your SwiftPM dependen
 
 | App Settings | Acknowledgements | License Details|
 | --- | --- | --- |
-| ![App Settings](Resource/readme_1.png) | ![Acknowledgements Page](Resource/readme_2.png) | ![Drill-down](Resource/readme_3.png) |
+| ![App Settings](./Resource/readme_1.png) | ![Acknowledgements Page](./Resource/readme_2.png) | ![Drill-down](./Resource/readme_3.png) |
 
 ## Installation
 
