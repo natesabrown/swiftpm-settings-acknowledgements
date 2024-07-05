@@ -1,5 +1,27 @@
 # SwiftPM Settings Acknowledgements
 
+Generate a license acknowledgements page for your app from your SwiftPM dependencies.
+
+## Installation
+
+Currently the only supported installation method is cloning and installing. The command will be added to `/usr/bin/local`.
+
+```shell
+git clone https://github.com/natesabrown/swiftpm-settings-acknowledgements
+cd swiftpm-settings-acknowledgements
+sudo make install
+```
+
+## Usage
+
+In your app's root directory, run:
+
+```shell
+make-settings-from-spm  
+```
+
+Drag the resulting `Settings.bundle` into your `.xcodeproj`.
+
 ## Options
 
 #### `--directory-path`, `-d`
