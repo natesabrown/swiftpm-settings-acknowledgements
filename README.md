@@ -2,6 +2,10 @@
 
 Generate a license acknowledgements page for your app from your SwiftPM dependencies.
 
+| App Settings | Acknowledgements | License Details|
+| --- | --- | --- |
+| ![App Settings](Resource/readme_1.png) | ![Acknowledgements Page](Resource/readme_2.png) | ![Drill-down](Resource/readme_3.png) |
+
 ## Installation
 
 Currently the only supported installation method is cloning and installing. The command will be added to `/usr/bin/local`.
