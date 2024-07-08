@@ -21,7 +21,7 @@ sudo make install
 In your app's root directory, run:
 
 ```shell
-make-settings-from-spm  
+swiftpm-settings-acknowledgements
 ```
 
 Drag the resulting `Settings.bundle` into your `.xcodeproj`.
