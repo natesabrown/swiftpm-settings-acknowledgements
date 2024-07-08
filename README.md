@@ -2,9 +2,9 @@
 
 Generate a license acknowledgements page for your app from your SwiftPM dependencies.
 
-| App Settings                              | Acknowledgements                                  | License Details                        |
-| ----------------------------------------- | ------------------------------------------------- | -------------------------------------- |
-| ![App Settings](./Resource/readme_1.PNG)  | ![Acknowledgements Page](./Resource/readme_2.PNG) | ![Drill-down](./Resource/readme_3.PNG) |
+| App Settings |  Acknowledgements | License Details |
+| ---| --- | --- |
+| ![App Settings](./Resource/readme_1.PNG) | ![Acknowledgements Page](./Resource/readme_2.PNG) | ![Drill-down](./Resource/readme_3.PNG) |
 
 ## Installation
 
@@ -80,3 +80,10 @@ If not provided, this program will look for the file within your directory's `.x
 ## Acknowledgements
 
 This project was inspired by [LicensePlist](https://github.com/mono0926/LicensePlist) by [mono0926](https://github.com/mono0926).
+
+<!-- Fix table image sizing -->
+<style>
+    table th {
+        width: 33.33%;
+    }
+</style>
