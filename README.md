@@ -2,9 +2,28 @@
 
 Generate a license acknowledgements page for your app from your SwiftPM dependencies.
 
-| App Settings | Acknowledgements | License Details|
-| --- | --- | --- |
-| ![App Settings](./Resource/readme_1.PNG) | ![Acknowledgements Page](./Resource/readme_2.PNG) | ![Drill-down](./Resource/readme_3.PNG) |
+<table width="100%">
+  <thead>
+    <tr>
+      <th width="33.33%">App Settings</th>
+      <th width="33.33%">Acknowledgements</th>
+      <th width="33.33%">License Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td width="33.33%">
+        <img src="./Resource/readme_1.PNG" alt="App Settings screenshot"/>
+      </td>
+      <td width="33.33%">
+        <img src="./Resource/readme_2.PNG" alt="Acknowledgements Panel screenshot"/>
+      </td>
+      <td width="33.33%">
+        <img src="./Resource/readme_3.PNG" alt="License contents screenshot"/>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 ## Installation
 
